@@ -10,7 +10,7 @@ local function applyImpulseToHumanoid(Humanoid, intens)
     end
 end
 
-while boostActive do
+local function checkBoostActive()
     local localPlayer = game:GetService("Players").LocalPlayer
     local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
@@ -26,6 +26,9 @@ while boostActive do
             vehicleLoopSpeed = nil
         end
     end
+end
 
+while boostActive do
+    checkBoostActive()
     wait()
 end
