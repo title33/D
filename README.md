@@ -1,5 +1,6 @@
 local intens = 600 -- set speed boost
 local boostActive = true
+local vehicleLoopSpeed
 
 local function applyImpulseToHumanoid(Humanoid, intens)
     if Humanoid:IsA("Humanoid") and Humanoid.SeatPart then
@@ -9,17 +10,22 @@ local function applyImpulseToHumanoid(Humanoid, intens)
     end
 end
 
-local vehicleLoopSpeed = game:GetService("RunService").Stepped:Connect(function()
+while boostActive do
     local localPlayer = game:GetService("Players").LocalPlayer
     local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
     if humanoid then
-        applyImpulseToHumanoid(humanoid, intens)
+        if not vehicleLoopSpeed then
+            vehicleLoopSpeed = game:GetService("RunService").Stepped:Connect(function()
+                applyImpulseToHumanoid(humanoid, intens)
+            end)
+        end
+    else
+        if vehicleLoopSpeed then
+            vehicleLoopSpeed:Disconnect()
+            vehicleLoopSpeed = nil
+        end
     end
-end)
 
-while boostActive do
     wait()
 end
-
-vehicleLoopSpeed:Disconnect()
